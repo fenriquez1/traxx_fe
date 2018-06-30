@@ -15,10 +15,14 @@ OBJS += \
 CPP_DEPS += \
 src/CoordinateConverter.d
 
+LIBS = -lpistache -lpthread
+
+LIBS_DIR = /usr/local/lib/
+
 all: CoordinateConverter
 
 CoordinateConverter: $(OBJS)
-	$(CPP) $(LFLAGS) -o $@ $(OBJS)
+	$(CPP) $(LFLAGS) -o $@ $(OBJS) $(LIBS)
 
 $(OBJS): $(CPP_SRCS)
 	$(CPP) $(CFLAGS) -MMD -MP -MF "$(@:%.o=%.d)" -MT"$(@)" $(CPP_SRCS)
