@@ -12,13 +12,16 @@ src/CoordinateConverter.cpp
 OBJS += \
 ./CoordinateConverter.o
 
+CPP_DEPS += \
+src/CoordinateConverter.d
+
 all: CoordinateConverter
 
-ObjectScope: $(OBJS)
+CoordinateConverter: $(OBJS)
 	$(CPP) $(LFLAGS) -o $@ $(OBJS)
 
 $(OBJS): $(CPP_SRCS)
-	$(CPP) $(CFLAGS) -MT"$(@)" $(CPP_SRCS)
+	$(CPP) $(CFLAGS) -MMD -MP -MF "$(@:%.o=%.d)" -MT"$(@)" $(CPP_SRCS)
 
 clean:
 	-$(RM) $(OBJS) CoordinateConverter
