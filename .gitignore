@@ -30,6 +30,6 @@
 *.exe
 *.out
 *.app
-
+CoordinateConverter
 # Visual Studio Code
 .vscode/*
