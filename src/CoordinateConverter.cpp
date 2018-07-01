@@ -13,6 +13,7 @@ void handleStatus(const Pistache::Rest::Request&,
 	Pistache::Http::ResponseWriter response) {
     json tJSON;
 	tJSON["status"] = "running";
+	response.setMime(MIME(Application, Json));
 	response.send(Pistache::Http::Code::Ok, tJSON.dump());
 }
 
