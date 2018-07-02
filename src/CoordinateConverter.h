@@ -28,6 +28,7 @@ public:
 
 private:
 	void setupRoutes();
+	void addCoordinates(const Rest::Request &req, Http::ResponseWriter resp);
 	std::shared_ptr<Http::Endpoint> httpEndpoint;
 	Rest::Router router;
 	
