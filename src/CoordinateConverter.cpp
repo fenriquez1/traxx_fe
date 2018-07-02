@@ -13,6 +13,7 @@ void handleStatus(const Pistache::Rest::Request&,
 	Pistache::Http::ResponseWriter response) {
     json tJSON;
 	tJSON["status"] = "running";
+	response.setMime(MIME(Application, Json));
 	response.send(Pistache::Http::Code::Ok, tJSON.dump());
 }
 
@@ -49,7 +50,20 @@ void CoordinateConverter::setupRoutes() {
 	using namespace Rest;
 
 	Routes::Get(router, "/status", Routes::bind(&handleStatus));
+	Routes::Post(router, "/addcoordinates", Routes::bind(&CoordinateConverter::addCoordinates, this));
+}
 
+void CoordinateConverter::addCoordinates(const Rest::Request &request, Http::ResponseWriter response) {
+	// Get coordinates received as json
+	// auto latlong = request.param(":latlong").as<std::string>();
+	auto latlong = request.body();
+
+	auto headers = request.headers();
+	auto ct = headers.get<Http::Header::ContentType>();
+	// std::cout << "Content type = " << ct << std::endl;
+
+	std::cout << "latlong = " << latlong << std::endl;
+	response.send(Http::Code::Ok, "1");
 }
 
 } /* namespace traxx */
