@@ -65,7 +65,85 @@ void CoordinateConverter::addCoordinates(const Rest::Request &request, Http::Res
 	std::cout << "latlong = " << latlong << std::endl;
 	response.send(Http::Code::Ok, "1");
 }
+std::string CoordinateConverter::degreesDecimals(std::string coordinate){
+	
+	//Declare variables
+	const std::string cardDirPositive = "+";
+ 	const std::string cardDirNegative = "-";
+  	std::string cardinalDirection;
+  	std::string::size_type sz;
+  	std::string newFormat;
+  	std::string deg;
+  	std::string min;
+  	std::string sec;
+   	double DD,degrees, minute, second = 0;
+  	int pos, endpos;
 
+	// removes all white spaces
+  	coordinate.erase(std::remove_if(coordinate.begin(),coordinate.end(),isspace),coordinate.end()); 
+	
+  	pos = coordinate.find("°"); 
+
+  	deg = coordinate.substr(0, pos); //copies everything before position
+
+  	endpos = coordinate.find("\'");
+
+  	min = coordinate.substr(pos+2,endpos-(pos+2));
+
+	pos = endpos;
+	endpos = coordinate.find("\"");
+	sec = coordinate.substr(pos+1,endpos-(pos+1));
+
+
+	//Convert to double
+	degrees = std::stod (deg,&sz);
+	minute = std::stod(min,&sz);
+	second = std::stod(sec,&sz);
+
+	
+	std::cout << std::endl << degrees << "minutes" << minute << "seconds" << second;
+
+	//Converts to Degree Decimal
+	DD = degrees + (minute/60) + (second/3600);
+
+	std::cout << std::endl << "Degree Decimal" << DD;
+
+	newFormat = std::to_string(DD);
+
+	std::cout << std::endl << newFormat;
+
+	//search for cardinal direction letters
+	sz = coordinate.find_first_of("NnEeWwSs");
+	cardinalDirection = coordinate.substr(sz);
+	//takes only the first letter
+	cardinalDirection = cardinalDirection.substr(0,1);
+
+	std::cout << "Cardinal Direction:" << cardinalDirection;
+
+	//Assigns + or - depending on cardinal direction
+	if (cardinalDirection == "N" || cardinalDirection == "n") {
+		std::cout << std::endl << "at else if n or N";
+		newFormat.insert(0,cardDirPositive);
+	}
+	else if (cardinalDirection == "E" || cardinalDirection == "e"){
+		std::cout << std::endl << "at else if e or E";
+		newFormat.insert(0,cardDirPositive);
+	}
+	else if (cardinalDirection == "W" || cardinalDirection == "w" ){
+		std::cout << std::endl << "at else if w or W";
+		newFormat.insert(0,cardDirNegative);
+	}
+	else if (cardinalDirection == "S" || cardinalDirection == "s"){
+		std::cout << std::endl << "at else if s or S";
+		newFormat.insert(0,cardDirNegative);
+		
+	}
+	//Add Degree symbol at end of coordinate
+	newFormat.append("°");
+
+	return newFormat;
+
+}
 } /* namespace traxx */
 
 int main(int argc, char *argv[]) {

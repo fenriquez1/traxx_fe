@@ -12,6 +12,10 @@
 #include "pistache/endpoint.h"
 #include "pistache/http.h"
 #include "pistache/router.h"
+#include <string.h>
+#include <cctype>
+#include <algorithm>
+
 
 namespace traxx {
 
@@ -31,7 +35,8 @@ private:
 	void addCoordinates(const Rest::Request &req, Http::ResponseWriter resp);
 	std::shared_ptr<Http::Endpoint> httpEndpoint;
 	Rest::Router router;
-	
+	std::string degreesDecimals(std::string);
+	//test
 
 };
 
