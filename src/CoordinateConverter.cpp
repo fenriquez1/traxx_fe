@@ -51,6 +51,7 @@ void CoordinateConverter::setupRoutes() {
 
 	Routes::Get(router, "/status", Routes::bind(&handleStatus));
 	Routes::Post(router, "/addcoordinates", Routes::bind(&CoordinateConverter::addCoordinates, this));
+	Routes::Get(router, "/getcoordinates", Routes::bind(&CoordinateConverter::getCoordinates, this));
 }
 
 void CoordinateConverter::addCoordinates(const Rest::Request &request, Http::ResponseWriter response) {
@@ -78,10 +79,13 @@ void CoordinateConverter::addCoordinates(const Rest::Request &request, Http::Res
 	std::cout << "Lat = " << latString << std::endl;
 	std::cout << "Long = " << longString << std::endl;
 
-	if (latString.empty() || longString.empty()) {
+	if (ddLat.empty() || ddLong.empty()) {
 		response.send(Http::Code::Unprocessable_Entity);
 	}
 	else {
+		// Store coordinates
+		storeCoordinates(ddLat, ddLong);
+
 		// Build the response JSON object
 		json respJSON;
 		respJSON["lat"] = ddLat;
@@ -92,6 +96,40 @@ void CoordinateConverter::addCoordinates(const Rest::Request &request, Http::Res
 		response.send(Http::Code::Ok, respJSON.dump());
 	}
 }
+
+void CoordinateConverter::getCoordinates(const Rest::Request &request, Http::ResponseWriter response) {
+	if (coorDB.empty()) {
+		std::string tEmpty = "Database is empty, no coordinates to retrieve";
+		response.send(Http::Code::No_Content);
+	}
+	else {
+		std::string latlong = coorDB.back();
+
+
+		std::cout << "Retrieved: " << latlong << std::endl;
+
+		size_t pos = latlong.find(",");
+		std::string ddLat = latlong.substr(0, pos);
+		std::string ddLong = latlong.substr(pos+1);
+
+		// Build the response JSON object
+		json respJSON;
+		respJSON["lat"] = ddLat;
+		respJSON["long"] = ddLong;
+		response.setMime(MIME(Application, Json));
+		response.send(Http::Code::Ok, respJSON.dump());
+	}
+}
+
+void CoordinateConverter::storeCoordinates(std::string pLat, std::string pLong) {
+	// Build coordinate pair string
+	std::string latlong;
+	latlong.append(pLat).append(",").append(pLong);
+	// Save to database
+	std::cout << "Storing: " << latlong << std::endl;
+	coorDB.push_back(latlong);
+}
+
 std::string CoordinateConverter::degreesDecimals(std::string coordinate){
 	
 	//Declare variables
