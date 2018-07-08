@@ -72,8 +72,8 @@ void CoordinateConverter::addCoordinates(const Rest::Request &request, Http::Res
 		}
 	}
 
-	// std::string ddLat = degreesDecimal(latString);
-	// std::string ddLong = degreesDecimal(longString);
+	std::string ddLat = degreesDecimals(latString);
+	std::string ddLong = degreesDecimals(longString);
 
 	std::cout << "Lat = " << latString << std::endl;
 	std::cout << "Long = " << longString << std::endl;
@@ -84,10 +84,10 @@ void CoordinateConverter::addCoordinates(const Rest::Request &request, Http::Res
 	else {
 		// Build the response JSON object
 		json respJSON;
-		respJSON["lat"] = latString;
-		respJSON["long"] = longString;
+		respJSON["lat"] = ddLat;
+		respJSON["long"] = ddLong;
 
-		std::cout << tJSON.dump() << std::endl;
+		std::cout << respJSON.dump() << std::endl;
 		response.setMime(MIME(Application, Json));
 		response.send(Http::Code::Ok, respJSON.dump());
 	}
