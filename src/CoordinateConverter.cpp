@@ -104,44 +104,80 @@ std::string CoordinateConverter::degreesDecimals(std::string coordinate){
   	std::string min;
   	std::string sec;
    	double DD,degrees, minute, second = 0;
-  	int pos, endpos;
-
+  	int endpos, cardinalCounter;
+	unsigned int pos;
 	// removes all white spaces
   	coordinate.erase(std::remove_if(coordinate.begin(),coordinate.end(),isspace),coordinate.end()); 
 	
-  	pos = coordinate.find("°"); 
+  	//search for cardinal direction letters
+	sz = coordinate.find_first_of("NnEeWwSs");
+	//std::cout <<"value of sz:" << sz;
+  
+  if(sz == std::string::npos){
+    //return empty string of letters other than NnEeWwSs are found
+    //std::cout << std::endl << "no match found for NEWS";
+    newFormat = "";
+    return newFormat;
+  }
+  else{
+    cardinalDirection = coordinate.substr(sz,1);
+    coordinate.erase(sz,1);
+    coordinate.append(cardinalDirection);
+    //std::cout << "this is the value of coordinate after erase:" << coordinate << std::endl << "cardinalDirection Value:" << cardinalDirection;
+  }
+  cardinalCounter = coordinate.length();
 
+  //std::cout <<"cardinal Counter value:" << cardinalCounter;
+
+  if(cardinalCounter > 12){
+    //std::cout << "In return empty string";
+    newFormat = "";
+    return newFormat;
+  }
+
+  //Parse out string to find degrees minutes seconds
+  	pos = coordinate.find("°");
+    
+  //string must constain degree symbol as minimum requirement else return empty string
+    if(pos == std::string::npos) {
+      newFormat = "";
+      return newFormat;
+    }
   	deg = coordinate.substr(0, pos); //copies everything before position
-
   	endpos = coordinate.find("\'");
-
   	min = coordinate.substr(pos+2,endpos-(pos+2));
-
-	pos = endpos;
-	endpos = coordinate.find("\"");
-	sec = coordinate.substr(pos+1,endpos-(pos+1));
-
-
-	//Convert to double
-	degrees = std::stod (deg,&sz);
-	minute = std::stod(min,&sz);
-	second = std::stod(sec,&sz);
-
+    pos = endpos;
+    endpos = coordinate.find("\"");
+    sec = coordinate.substr(pos+1,endpos-(pos+1));
 	
-	std::cout << std::endl << degrees << "minutes" << minute << "seconds" << second;
-
-	//Converts to Degree Decimal
-	DD = degrees + (minute/60) + (second/3600);
-
-	std::cout << std::endl << "Degree Decimal" << DD;
+  //std::cout << std::endl << degrees << "minutes" << minute << "seconds" << second;
+  //std::cout << std::endl << "coordinate format before conversion:" << coordinate;
+  
+  //Converts to Degree Decimal
+  if(coordinate.find("\"") != std::string::npos){
+    //Convert to double
+   // std::cout << "In degrees minutes seconds" << std::endl;
+	degrees = std::stod (deg,&sz);
+  	minute = std::stod(min,&sz);
+	second = std::stod(sec,&sz);
+    DD = degrees + (minute/60) + (second/3600);
+  }
+  else{
+    //Convert to double
+    //std::cout <<"In degrees minutes.m";
+    degrees = std::stod (deg,&sz);
+  	minute = std::stod(min,&sz);
+    DD = degrees + (minute/60);
+  }
+	
+	//std::cout << std::endl << "Degree Decimal" << DD;
 
 	newFormat = std::to_string(DD);
 
-	std::cout << std::endl << newFormat;
+	//std::cout << std::endl << newFormat;
 
-	//search for cardinal direction letters
-	sz = coordinate.find_first_of("NnEeWwSs");
-	cardinalDirection = coordinate.substr(sz);
+  	//std::cout <<"Value of sz:" << cardinalDirection <<std::endl;
+	
 	//takes only the first letter
 	cardinalDirection = cardinalDirection.substr(0,1);
 

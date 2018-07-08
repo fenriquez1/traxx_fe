@@ -36,7 +36,7 @@ private:
 	std::shared_ptr<Http::Endpoint> httpEndpoint;
 	Rest::Router router;
 	std::string degreesDecimals(std::string);
-	//test
+	
 
 };
 
