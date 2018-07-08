@@ -55,15 +55,42 @@ void CoordinateConverter::setupRoutes() {
 
 void CoordinateConverter::addCoordinates(const Rest::Request &request, Http::ResponseWriter response) {
 	// Get coordinates received as json
-	// auto latlong = request.param(":latlong").as<std::string>();
 	auto latlong = request.body();
 
-	auto headers = request.headers();
-	auto ct = headers.get<Http::Header::ContentType>();
-	// std::cout << "Content type = " << ct << std::endl;
+	auto tJSON = json::parse(latlong);
+	
+	// Search for lat and long key:value pairs
+	std::string latString;
+	std::string longString;
+	for (json::iterator it = tJSON.begin(); it != tJSON.end(); ++it) {
+		std::cout << it.key() << " : " << it.value() << "\n";
+		if (it.key() == "lat") {
+			latString.assign(it.value());
+		}
+		else if (it.key() == "long") {
+			longString.assign(it.value());
+		}
+	}
 
-	std::cout << "latlong = " << latlong << std::endl;
-	response.send(Http::Code::Ok, "1");
+	std::string ddLat = degreesDecimals(latString);
+	std::string ddLong = degreesDecimals(longString);
+
+	std::cout << "Lat = " << latString << std::endl;
+	std::cout << "Long = " << longString << std::endl;
+
+	if (latString.empty() || longString.empty()) {
+		response.send(Http::Code::Unprocessable_Entity);
+	}
+	else {
+		// Build the response JSON object
+		json respJSON;
+		respJSON["lat"] = ddLat;
+		respJSON["long"] = ddLong;
+
+		std::cout << respJSON.dump() << std::endl;
+		response.setMime(MIME(Application, Json));
+		response.send(Http::Code::Ok, respJSON.dump());
+	}
 }
 std::string CoordinateConverter::degreesDecimals(std::string coordinate){
 	

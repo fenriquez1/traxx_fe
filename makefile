@@ -28,6 +28,6 @@ $(OBJS): $(CPP_SRCS)
 	$(CPP) $(CFLAGS) -MMD -MP -MF "$(@:%.o=%.d)" -MT"$(@)" $(CPP_SRCS)
 
 clean:
-	-$(RM) $(OBJS) CoordinateConverter
+	-$(RM) $(OBJS) CoordinateConverter*
 
 .PHONY: all clean dependents
