@@ -40,12 +40,8 @@ private:
 
 	std::shared_ptr<Http::Endpoint> httpEndpoint;
 	Rest::Router router;
-<<<<<<< HEAD
 	std::string degreesDecimals(std::string);
-	
-=======
 	std::vector<std::string> coorDB;
->>>>>>> origin/master
 
 };
 
