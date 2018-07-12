@@ -8,13 +8,14 @@
 #ifndef COORDINATECONVERTER_H_
 #define COORDINATECONVERTER_H_
 
+#include <algorithm>
+#include <cctype>
+#include <string.h>
+#include <vector>
 #include "json.hpp"
 #include "pistache/endpoint.h"
 #include "pistache/http.h"
 #include "pistache/router.h"
-#include <string.h>
-#include <cctype>
-#include <algorithm>
 
 
 namespace traxx {
@@ -33,10 +34,18 @@ public:
 private:
 	void setupRoutes();
 	void addCoordinates(const Rest::Request &req, Http::ResponseWriter resp);
+	void getCoordinates(const Rest::Request &req, Http::ResponseWriter resp);
+	std::string degreesDecimals(std::string);
+	void storeCoordinates(std::string pLat, std::string pLong);
+
 	std::shared_ptr<Http::Endpoint> httpEndpoint;
 	Rest::Router router;
+<<<<<<< HEAD
 	std::string degreesDecimals(std::string);
 	
+=======
+	std::vector<std::string> coorDB;
+>>>>>>> origin/master
 
 };
 
