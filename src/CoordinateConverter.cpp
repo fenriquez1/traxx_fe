@@ -33,6 +33,7 @@ CoordinateConverter::~CoordinateConverter() {
 
 void CoordinateConverter::init(size_t thr) {
 	auto opts = Http::Endpoint::options().threads(thr).flags(Tcp::Options::InstallSignalHandler);
+	std::cout << "Initializing" << std::endl;
 	httpEndpoint->init(opts);
 	setupRoutes();
 }
