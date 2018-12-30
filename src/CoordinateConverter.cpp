@@ -39,11 +39,13 @@ void CoordinateConverter::init(size_t thr) {
 }
 
 void CoordinateConverter::start() {
+	std::cout << "Starting Coordinate Converter." << std::endl;
 	httpEndpoint->setHandler(router.handler());
 	httpEndpoint->serve();
 }
 
 void CoordinateConverter::shutdown() {
+	std::cout << "Shuting down..." << std::endl;
 	httpEndpoint->shutdown();
 }
 
@@ -100,7 +102,7 @@ void CoordinateConverter::addCoordinates(const Rest::Request &request, Http::Res
 
 void CoordinateConverter::getCoordinates(const Rest::Request &request, Http::ResponseWriter response) {
 	if (coorDB.empty()) {
-		std::string tEmpty = "Database is empty, no coordinates to retrieve";
+		std::cout << "Database is empty, no coordinates to retrieve" << std::endl;
 		response.send(Http::Code::No_Content);
 	}
 	else {
